@@ -130,7 +130,7 @@ namespace tdd.web.Tests.Controllers
             var mockRepository = new Mock<IPerfilRepository>();
             var _perfil = new perfis() { id_perfil = 3, descricao = "Biscoito", ativo = 1, usuarios = new List<usuarios>() };
 
-            mockRepository.Setup(m => m.Getperfis(4)).Returns(_perfil);
+            mockRepository.Setup(m => m.Getperfis(5)).Returns(_perfil);
             mockRepository.Setup(m => m.Deleteperfis(3)).Returns(_perfil);
 
             var _controller = new perfisController(mockRepository.Object);
