@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="icatuDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="perfis">
+          <Key>
+            <PropertyRef Name="id_perfil" />
+          </Key>
+          <Property Name="id_perfil" Type="int" Nullable="false" />
+          <Property Name="descricao" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ativo" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'icatuDB.dbo.usuario_perfil' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="usuario_perfil">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+            <PropertyRef Name="id_perfil" />
+          </Key>
+          <Property Name="id_usuario" Type="int" Nullable="false" />
+          <Property Name="id_perfil" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuarios">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+          </Key>
+          <Property Name="id_usuario" Type="int" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="endereco" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Id_perfil">
+          <End Role="perfis" Type="Self.perfis" Multiplicity="1" />
+          <End Role="usuario_perfil" Type="Self.usuario_perfil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="perfis">
+              <PropertyRef Name="id_perfil" />
+            </Principal>
+            <Dependent Role="usuario_perfil">
+              <PropertyRef Name="id_perfil" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Id_usuario">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="usuario_perfil" Type="Self.usuario_perfil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="usuario_perfil">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="icatuDBModelStoreContainer">
+          <EntitySet Name="perfis" EntityType="Self.perfis" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario_perfil" EntityType="Self.usuario_perfil" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [usuario_perfil].[id_usuario] AS [id_usuario], 
+    [usuario_perfil].[id_perfil] AS [id_perfil]
+    FROM [dbo].[usuario_perfil] AS [usuario_perfil]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Id_perfil" Association="Self.FK_Id_perfil">
+            <End Role="perfis" EntitySet="perfis" />
+            <End Role="usuario_perfil" EntitySet="usuario_perfil" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Id_usuario" Association="Self.FK_Id_usuario">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="usuario_perfil" EntitySet="usuario_perfil" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="icatuDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="perfis">
+          <Key>
+            <PropertyRef Name="id_perfil" />
+          </Key>
+          <Property Name="id_perfil" Type="Int32" Nullable="false" />
+          <Property Name="descricao" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ativo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuarios" Relationship="Self.usuario_perfil" FromRole="perfis" ToRole="usuarios" />
+        </EntityType>
+        <EntityType Name="usuarios">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+          </Key>
+          <Property Name="id_usuario" Type="Int32" Nullable="false" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="endereco" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="perfis" Relationship="Self.usuario_perfil" FromRole="usuarios" ToRole="perfis" />
+        </EntityType>
+        <Association Name="usuario_perfil">
+          <End Role="perfis" Type="Self.perfis" Multiplicity="*" />
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="icatuDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="perfis" EntityType="Self.perfis" />
+          <EntitySet Name="usuarios" EntityType="Self.usuarios" />
+          <AssociationSet Name="usuario_perfil" Association="Self.usuario_perfil">
+            <End Role="perfis" EntitySet="perfis" />
+            <End Role="usuarios" EntitySet="usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="icatuDBModelStoreContainer" CdmEntityContainer="icatuDBEntities">
+          <EntitySetMapping Name="perfis">
+            <EntityTypeMapping TypeName="icatuDBModel.perfis">
+              <MappingFragment StoreEntitySet="perfis">
+                <ScalarProperty Name="id_perfil" ColumnName="id_perfil" />
+                <ScalarProperty Name="descricao" ColumnName="descricao" />
+                <ScalarProperty Name="ativo" ColumnName="ativo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuarios">
+            <EntityTypeMapping TypeName="icatuDBModel.usuarios">
+              <MappingFragment StoreEntitySet="usuarios">
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="endereco" ColumnName="endereco" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="usuario_perfil" TypeName="icatuDBModel.usuario_perfil" StoreEntitySet="usuario_perfil">
+            <EndProperty Name="perfis">
+              <ScalarProperty Name="id_perfil" ColumnName="id_perfil" />
+            </EndProperty>
+            <EndProperty Name="usuarios">
+              <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
