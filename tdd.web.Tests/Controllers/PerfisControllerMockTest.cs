@@ -62,7 +62,8 @@ namespace tdd.web.Tests.Controllers
         public void Get_One_Profile()
         {
             var mockRepository = new Mock<IPerfilRepository>();
-            mockRepository.Setup(m => m.Getperfis(1)).Returns(GetFakeProfiles().First());
+            var _perfil = new perfis() { id_perfil = 1, descricao = "Biscoito", ativo = 1, usuarios = new List<usuarios>() };
+            mockRepository.Setup(m => m.Getperfis(1)).Returns(_perfil);
 
             var _controller = new perfisController(mockRepository.Object);
 
